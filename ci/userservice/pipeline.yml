@@ -25,7 +25,7 @@ resources:
   - name: splitter-artifacts
     type: maven-resource
     source:
-      url: http://127.0.0.1/repository/releases/
+      url: http://127.0.0.1:8081/repository/releases/
       artifact: com.splitter:userservice:jar
       username: ((nexus-username))
       password: ((nexus-password))

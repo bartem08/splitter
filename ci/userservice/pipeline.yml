@@ -41,6 +41,7 @@ jobs:
       - put: splitter-artifacts
         params:
           file: splitter-jars/*.jar
+          version_file: splitter-jars/snapshotVersion
   - name: deploy-dev
     plan:
       - aggregate:

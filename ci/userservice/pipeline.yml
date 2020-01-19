@@ -18,10 +18,11 @@ resources:
   - name: cf-dev
     type: cf
     source:
-      url: http://da
-      artifact: csa
+      url: https://api.run.pivotal.io
       username: ((cf-username))
       password: ((cf-password))
+      organization: artem-org
+      space: dev
       skip_cert_check: true
   - name: splitter-artifacts
     type: maven-resource

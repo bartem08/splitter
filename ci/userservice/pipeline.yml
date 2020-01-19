@@ -39,7 +39,7 @@ jobs:
       - aggregate:
           - get: git-sources
       - task: test and build
-        file: git-sources/ci/UserService/tasks/test-and-build.yml
+        file: git-sources/ci/userservice/tasks/test-and-build.yml
       - put: splitter-artifacts
         params:
           file: splitter-jars/*.jar

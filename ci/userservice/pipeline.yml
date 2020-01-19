@@ -13,8 +13,6 @@ resources:
       password: ((git-password))
       branch: master
       skip_ssl_verification: true
-      paths:
-        - UserService/**
   - name: cf-dev
     type: cf
     source:

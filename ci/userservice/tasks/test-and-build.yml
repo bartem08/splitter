@@ -17,4 +17,4 @@ caches:
   - path: .gradle/
 
 run:
-  path: git-sources/ci/app/tasks/test-and-build.sh
+  path: git-sources/ci/userservice/tasks/test-and-build.sh

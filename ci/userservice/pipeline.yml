@@ -1,0 +1,60 @@
+resource_types:
+  - name: maven-resource
+    type: docker-image
+    source:
+      repository: nulldriver/maven-resource
+      tag: latest
+resources:
+  - name: git-sources
+    type: git
+    source:
+      uri: https://github.com/bartem08/splitter.git
+      username: ((git-username))
+      password: ((git-password))
+      branch: master
+      skip_ssl_verification: true
+      paths:
+        - UserService/**
+  - name: cf-dev
+    type: cf
+    source:
+      url: http://da
+      artifact: csa
+      username: ((cf-username))
+      password: ((cf-password))
+      skip_cert_check: true
+  - name: splitter-artifacts
+    type: maven-resource
+    source:
+      url: http://127.0.0.1/repository/releases/
+      artifact: com.splitter:userservice:jar
+      username: ((nexus-username))
+      password: ((nexus-password))
+      skip_cert_check: true
+
+jobs:
+  - name: test-build-publish
+    plan:
+      - aggregate:
+          - get: git-sources
+      - task: test and build
+        file: git/ci/UserService/tasks/test-and-build.yml
+      - put: splitter-artifacts
+        params:
+          file: splitter-jars/*.jar
+  - name: deploy-dev
+    plan:
+      - aggregate:
+          - get: git-sources
+            passed: [test-build-publish]
+          - get: splitter-artifacts
+            trigger: true
+            passed: [test-build-publish]
+      - put: cf-dev
+        params:
+          manifest: git/ci/userservice/manifests/manifest-dev.yml
+          path: splitter-artifacts/UserService-*.jar
+          environment_variables:
+            SPRING_PROFILES_ACTIVE: dev
+
+

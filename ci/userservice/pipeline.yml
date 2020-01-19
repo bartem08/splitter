@@ -39,7 +39,7 @@ jobs:
       - aggregate:
           - get: git-sources
       - task: test and build
-        file: git/ci/UserService/tasks/test-and-build.yml
+        file: git-sources/ci/UserService/tasks/test-and-build.yml
       - put: splitter-artifacts
         params:
           file: splitter-jars/*.jar
@@ -53,7 +53,7 @@ jobs:
             passed: [test-build-publish]
       - put: cf-dev
         params:
-          manifest: git/ci/userservice/manifests/manifest-dev.yml
+          manifest: git-sources/ci/userservice/manifests/manifest-dev.yml
           path: splitter-artifacts/UserService-*.jar
           environment_variables:
             SPRING_PROFILES_ACTIVE: dev

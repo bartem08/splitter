@@ -5,8 +5,8 @@ set -e -u
 #export TERM=${TERM:-dumb}
 #version=$(<latest-version/version)-SNAPSHOT
 
-pushd git
+pushd git-sources
    ./gradlew clean UserService:build
 popd
 
-cp git/UserService/build/libs/*.jar splitter-jars/
+cp git-sources/UserService/build/libs/*.jar splitter-jars/

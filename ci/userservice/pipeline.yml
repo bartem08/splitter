@@ -1,9 +1,3 @@
-resource_types:
-  - name: maven-resource
-    type: docker-image
-    source:
-      repository: nulldriver/maven-resource
-      tag: latest
 resources:
   - name: git-sources
     type: git
@@ -16,45 +10,25 @@ resources:
   - name: cf-dev
     type: cf
     source:
-      url: https://api.run.pivotal.io
+      api: https://api.run.pivotal.io
       username: ((cf-username))
       password: ((cf-password))
       organization: artem-org
-      space: dev
-      skip_cert_check: true
-  - name: splitter-artifacts
-    type: maven-resource
-    source:
-      url: http://127.0.0.1:8081/repository/releases/
-      artifact: com.splitter:userservice:jar
-      username: ((nexus-username))
-      password: ((nexus-password))
+      space: DEV
       skip_cert_check: true
 
 jobs:
   - name: test-build-publish
     plan:
-      - aggregate:
-          - get: git-sources
+      - get: git-sources
       - task: test and build
         file: git-sources/ci/userservice/tasks/test-and-build.yml
-      - put: splitter-artifacts
-        params:
-          file: splitter-jars/*.jar
-          version_file: splitter-jars/snapshotVersion
-  - name: deploy-dev
-    plan:
-      - aggregate:
-          - get: git-sources
-            passed: [test-build-publish]
-          - get: splitter-artifacts
-            trigger: true
-            passed: [test-build-publish]
       - put: cf-dev
         params:
           manifest: git-sources/ci/userservice/manifests/manifest-dev.yml
-          path: splitter-artifacts/UserService-*.jar
+          path: splitter-jars/*.jar
           environment_variables:
             SPRING_PROFILES_ACTIVE: dev
+
 
 
